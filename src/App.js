@@ -1,23 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
+import { useState } from 'react'
+const URL = 'https://www.metaweather.com/api'
+const fetchWeather = async (city) => {
+  const response = await fetch(`${URL}/location/search/?query=${city}`)
+  const data = await response.json();
+  return data
+}
 
-function App() {
+const App = () => {
+
+  const [searchTerm, setSearchTerm] = useState('')
+  const handleTermChange = (e) => {
+    let value = e.target.value
+    setSearchTerm(value)
+  }
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    console.log(fetchWeather(searchTerm))
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <form onSubmit={handleSubmit}>
+        <input type='text' placeholder='Enter city name' onChange={handleTermChange} />
+        <input type='submit' value='Search' />
+      </form>
     </div>
   );
 }
