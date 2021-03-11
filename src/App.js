@@ -16,8 +16,9 @@ const fetchLocationIDs = (location) => {
 
 }
 const fetchCityForecast = (woeid) => {
+  //api was blocking request by woeid so I used heroku server to access api
   return new Promise((resolve, reject) => {
-    fetch(`https://weather-api-middle.herokuapp.com/2122265/${woeid}`, {})
+    fetch(`https://weather-api-middle.herokuapp.com/${woeid}`, {})
       .then(handleErrors)
       .then(response => resolve(response.json()))
       .catch(err => reject(err.statusText))
@@ -51,19 +52,49 @@ const App = () => {
   return (
     <div className="App">
       <form onSubmit={handleSubmit}>
-        <input type='text' placeholder='Enter city name' onChange={handleTermChange} />
-        <input type='submit' value='Search' />
+        <input className='form-element' type='text' placeholder='Enter city name' onChange={handleTermChange} />
+        <input className='form-element' type='submit' value='Search' />
       </form>
-      <div>
-        <ul>
-          {forecastList.map((city, i) =>
-            <li key={i}>
-              {city.title}
-            </li>
-          )}
-        </ul>
+      <div className='table-container'>
+        <table>
+          <thead>
+            <tr>
+              <th>Location</th>
+              <th>Temp</th>
+              <th>Max temp</th>
+              <th>Min temp</th>
+              <th>Weather State</th>
+              <th>Wind Speed</th>
+              <th>Pressure</th>
+              <th>Humidity</th>
+              <th>Visibility</th>
+              <th>Confidence</th>
+            </tr>
+          </thead>
+          <tbody>
+            {forecastList.map(
+              (city, i) => {
+                const { consolidated_weather, title } = city
+                const { the_temp, max_temp, min_temp, weather_state_name, wind_speed, air_pressure, humidity, visibility, predictability } = consolidated_weather[0]
+                return (< tr key={i} >
+                  <td>{title}</td>
+                  <td>{Math.round(the_temp)}°C</td>
+                  <td>{Math.round(max_temp)}°C</td>
+                  <td>{Math.round(min_temp)}°C</td>
+                  <td>{weather_state_name}</td>
+                  <td>{Math.round(wind_speed)}mph</td>
+                  <td>{Math.round(air_pressure)}mb</td>
+                  <td>{Math.round(humidity)}%</td>
+                  <td>{Math.round(visibility)}miles</td>
+                  <td>{predictability}%</td>
+                </tr>
+                )
+              }
+            )}
+          </tbody>
+        </table>
       </div>
-    </div>
+    </div >
   );
 }
 
