@@ -6,9 +6,10 @@ function handleErrors(response) {
   }
   return response;
 }
+//api was blocking request by woeid so I used heroku server to access api
 const fetchLocationIDs = (location) => {
   return new Promise((resolve, reject) => {
-    fetch(`/location/search/?query=${location}`)
+    fetch(`https://weather-api-middle.herokuapp.com/title/${location}`)
       .then(handleErrors)
       .then(response => resolve(response.json()))
       .catch(err => reject(err.statusText))
@@ -16,7 +17,6 @@ const fetchLocationIDs = (location) => {
 
 }
 const fetchCityForecast = (woeid) => {
-  //api was blocking request by woeid so I used heroku server to access api
   return new Promise((resolve, reject) => {
     fetch(`https://weather-api-middle.herokuapp.com/${woeid}`, {})
       .then(handleErrors)
