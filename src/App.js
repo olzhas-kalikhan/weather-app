@@ -93,6 +93,7 @@ const App = () => {
             )}
           </tbody>
         </table>
+        {err && <h3>err</h3>}
       </div>
     </div >
   );
